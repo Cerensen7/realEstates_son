@@ -8,7 +8,7 @@
     <div class="p-2">
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link text-white d-flex align-items-center justify-content-between py-2" href="">
+                <a class="nav-link text-white d-flex align-items-center justify-content-between py-2" href="/realEstate/pages/home.php">
                     <div>
                         <i class="bi bi-house-door me-2"></i>
                         Ana Sayfa
@@ -21,13 +21,13 @@
                 <div class="text-uppercase fw-bold text-secondary small px-3 mb-1">İLAN YÖNETİM SİSTEMİ</div>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white py-2" href="pages/ilanlar.php">
+                <a class="nav-link text-white py-2" href="/realEstate/pages/ilanlar.php">
                     <i class="bi bi-list-ul me-2"></i>
                     İlanlar
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white py-2" href="pages/ilan_ekle.php">
+                <a class="nav-link text-white py-2" href="/realEstate/pages/ilan_ekle.php">
                     <i class="bi bi-file-earmark-plus me-2"></i>
                     İlan Ekle
                 </a>
@@ -37,13 +37,13 @@
                 <div class="text-uppercase fw-bold text-secondary small px-3 mb-1">SİSTEM</div>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white py-2" href="pages/yetkililer.php">
+                <a class="nav-link text-white py-2" href="/realEstate/pages/yetkililer.php">
                     <i class="bi bi-people me-2"></i>
                     Yetkililer
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white py-2" href="pages/yetkili_ekle.php">
+                <a class="nav-link text-white py-2" href="/realEstate/pages/yetkili_ekle.php">
                     <i class="bi bi-person-plus me-2"></i>
                     Yetkili Ekle
                 </a>
