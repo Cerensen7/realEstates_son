@@ -8,13 +8,13 @@
 
                 <ul class="nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="index.php">Ana Sayfa</a>
+                        <a class="nav-link" href="/realEstate/pages/home.php">Ana Sayfa</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="yetkililer.php">Yetkililer</a>
+                        <a class="nav-link" href="/realEstate/pages/yetkililer.php">Yetkililer</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="ilanlar.php">İlanlar</a>
+                        <a class="nav-link" href="/realEstate/pages/ilanlar.php">İlanlar</a>
                     </li>
                 </ul>
             </div>

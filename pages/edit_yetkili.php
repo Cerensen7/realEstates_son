@@ -1,33 +1,60 @@
 <?php
 $pdo = new PDO("mysql:host=localhost;dbname=rba", 'root', '');
 
-if ($_POST) {
-    if ($_POST['sifre'] !== $_POST['sifre_tekrar']) {
+$userId = $_GET['id'] ?? 0;
+$user = null;
+$hata = "";
+$basarili = "";
+
+if ($userId > 0) {
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE id_users = ?");
+    $stmt->execute([$userId]);
+    $user = $stmt->fetch();
+}
+
+if ($_POST && $user) {
+    if ($_POST['sifre'] && $_POST['sifre'] != $_POST['sifre_tekrar']) {
         $hata = "Şifreler eşleşmiyor!";
     } else {
-        $stmt = $pdo->prepare("INSERT INTO users (kullanici_adi, password, yetki, isim, soyisim, email, telefon, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-
-        $result = $stmt->execute([
-            $_POST['kullanici_adi'],
-            $_POST['sifre'],
-            $_POST['yetki_seviyesi'],
-            $_POST['ad'],
-            $_POST['soyad'],
-            $_POST['email'],
-            $_POST['telefon'],
-            $_POST['durum']
-        ]);
-
-        if ($result) {
-            $basarili = "Kullanıcı başarıyla eklendi!";
+        if ($_POST['sifre']) {
+            // Şifreli güncelleme
+            $sql = "UPDATE users SET kullanici_adi=?, password=?, yetki=?, isim=?, soyisim=?, email=?, telefon=?, status=? WHERE id_users=?";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([
+                $_POST['kullanici_adi'],
+                password_hash($_POST['sifre'], PASSWORD_DEFAULT),
+                $_POST['yetki_seviyesi'],
+                $_POST['ad'],
+                $_POST['soyad'],
+                $_POST['email'],
+                $_POST['telefon'],
+                $_POST['durum'],
+                $userId
+            ]);
         } else {
-            $hata = "Kullanıcı eklenirken hata oluştu!";
+            $sql = "UPDATE users SET kullanici_adi=?, yetki=?, isim=?, soyisim=?, email=?, telefon=?, status=? WHERE id_users=?";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([
+                $_POST['kullanici_adi'],
+                $_POST['yetki_seviyesi'],
+                $_POST['ad'],
+                $_POST['soyad'],
+                $_POST['email'],
+                $_POST['telefon'],
+                $_POST['durum'],
+                $userId
+            ]);
         }
+        $basarili = "Kullanıcı güncellendi!";
+
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE id_users = ?");
+        $stmt->execute([$userId]);
+        $user = $stmt->fetch();
     }
 }
 
-$yetkiler = $pdo->query("SELECT * FROM yetki_seviyeleri ORDER BY id_yetki")->fetchAll();
-$subeler = $pdo->query("SELECT * FROM subeler ORDER BY id_sube")->fetchAll();
+$yetkiler = $pdo->query("SELECT * FROM yetki_seviyeleri")->fetchAll();
+$subeler = $pdo->query("SELECT * FROM subeler")->fetchAll();
 ?>
 
 <!doctype html>
@@ -47,13 +74,19 @@ $subeler = $pdo->query("SELECT * FROM subeler ORDER BY id_sube")->fetchAll();
             <div class="p-3 flex-grow-1">
                 <div class="card">
                     <div class="card-header bg-white">
-                        <h5 class="mb-0">Yeni Kullanıcı Ekle</h5>
+                        <h5 class="mb-0">Kullanıcı Düzenle - <?= $user['isim'] ?> <?= $user['soyisim'] ?></h5>
                     </div>
                     <div class="card-body">
-                        <?php if (isset($basarili)): ?>
+                        <?php if (!$user): ?>
+                            <div class="alert alert-warning">
+                                <h6>Kullanıcı Bulunamadı!</h6>
+                                <p class="mb-0">Bu kullanıcı mevcut değil. <a href="yetkililer.php">Kullanıcı listesine dön</a></p>
+                            </div>
+                        <?php else: ?>
+                        <?php if ($basarili): ?>
                             <div class="alert alert-success"><?= $basarili ?></div>
                         <?php endif; ?>
-                        <?php if (isset($hata)): ?>
+                        <?php if ($hata): ?>
                             <div class="alert alert-danger"><?= $hata ?></div>
                         <?php endif; ?>
 
@@ -62,13 +95,13 @@ $subeler = $pdo->query("SELECT * FROM subeler ORDER BY id_sube")->fetchAll();
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Kullanıcı Adı</label>
-                                        <input type="text" class="form-control" name="kullanici_adi" placeholder="Kullanıcı adı giriniz" required>
+                                        <input type="text" class="form-control" name="kullanici_adi" value="<?= $user['kullanici_adi'] ?>" placeholder="Kullanıcı adı giriniz" required>
                                     </div>
 
                                     <div class="mb-3">
-                                        <label class="form-label">Şifre</label>
+                                        <label class="form-label">Yeni Şifre (Boş bırakılırsa değişmez)</label>
                                         <div class="input-group">
-                                            <input type="password" class="form-control" name="sifre" placeholder="Şifre giriniz" required>
+                                            <input type="password" class="form-control" name="sifre" placeholder="Yeni şifre (opsiyonel)">
                                             <button class="btn btn-outline-secondary" type="button">
                                                 <i class="bi bi-eye"></i>
                                             </button>
@@ -77,8 +110,8 @@ $subeler = $pdo->query("SELECT * FROM subeler ORDER BY id_sube")->fetchAll();
 
                                     <div class="mb-3">
                                         <label class="form-label">Yetkili Şube</label>
-                                        <select class="form-select" name="sube" required>
-                                            <option value="" selected>Şube seçiniz</option>
+                                        <select class="form-select" name="sube">
+                                            <option>Şube seçiniz</option>
                                             <?php foreach ($subeler as $s): ?>
                                                 <option value="<?= $s['id_sube'] ?>"><?= $s['sube_ismi'] ?></option>
                                             <?php endforeach; ?>
@@ -90,26 +123,28 @@ $subeler = $pdo->query("SELECT * FROM subeler ORDER BY id_sube")->fetchAll();
                                     <div class="mb-3">
                                         <label class="form-label">Kullanıcı Durumu</label>
                                         <select class="form-select" name="durum">
-                                            <option value="1" selected>Aktif</option>
-                                            <option value="0">Pasif</option>
+                                            <option value="1" <?= $user['status'] == 1 ? 'selected' : '' ?>>Aktif</option>
+                                            <option value="0" <?= $user['status'] == 0 ? 'selected' : '' ?>>Pasif</option>
                                         </select>
+                                        
                                     </div>
 
                                     <div class="mb-3">
-                                        <label class="form-label">Şifre Tekrar</label>
+                                        <label class="form-label">Yeni Şifre Tekrar</label>
                                         <div class="input-group">
-                                            <input type="password" class="form-control" name="sifre_tekrar" placeholder="Şifreyi tekrar giriniz" required>
+                                            <input type="password" class="form-control" name="sifre_tekrar" placeholder="Yeni şifreyi tekrar giriniz">
                                             <button class="btn btn-outline-secondary" type="button">
                                                 <i class="bi bi-eye"></i>
                                             </button>
                                         </div>
                                     </div>
+
                                     <div class="mb-3">
                                         <label class="form-label">Yetki Seviyesi</label>
-                                        <select class="form-select" name="yetki_seviyesi" required>
-                                            <option value="" selected>Yetki seviyesi seçiniz</option>
+                                        <select class="form-select" name="yetki_seviyesi">
+                                            <option>Yetki seviyesi seçiniz</option>
                                             <?php foreach ($yetkiler as $y): ?>
-                                                <option value="<?= $y['id_yetki'] ?>"><?= $y['yetki_ismi'] ?></option>
+                                                <option value="<?= $y['id_yetki'] ?>" <?= $user['yetki'] == $y['id_yetki'] ? 'selected' : '' ?>><?= $y['yetki_ismi'] ?></option>
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
@@ -123,26 +158,26 @@ $subeler = $pdo->query("SELECT * FROM subeler ORDER BY id_sube")->fetchAll();
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Ad</label>
-                                        <input type="text" class="form-control" name="ad" placeholder="Adınızı giriniz" required>
+                                        <input type="text" class="form-control" name="ad" value="<?= $user['isim'] ?>" placeholder="Adınızı giriniz" required>
                                     </div>
 
                                     <div class="mb-3">
                                         <label class="form-label">E-posta</label>
-                                        <input type="email" class="form-control" name="email" placeholder="E-posta adresinizi giriniz" required>
+                                        <input type="email" class="form-control" name="email" value="<?= $user['email'] ?>" placeholder="E-posta adresinizi giriniz" required>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Soyad</label>
-                                        <input type="text" class="form-control" name="soyad" placeholder="Soyadınızı giriniz" required>
+                                        <input type="text" class="form-control" name="soyad" value="<?= $user['soyisim'] ?>" placeholder="Soyadınızı giriniz" required>
                                     </div>
 
                                     <div class="mb-3">
                                         <label class="form-label">Cep Telefonu</label>
                                         <div class="input-group">
                                             <span class="input-group-text">+90</span>
-                                            <input type="tel" class="form-control" name="telefon" placeholder="(___) ___-____" required>
+                                            <input type="tel" class="form-control" name="telefon" value="<?= $user['telefon'] ?>" placeholder="(___) ___-____" required>
                                         </div>
                                         <div class="form-text">Örnek: (555) 123 4567</div>
                                     </div>
@@ -151,19 +186,19 @@ $subeler = $pdo->query("SELECT * FROM subeler ORDER BY id_sube")->fetchAll();
 
                             <div class="d-flex justify-content-end gap-2 mt-4">
                                 <a href="/realEstate/pages/yetkililer.php" class="btn btn-outline-secondary">İptal</a>
-                                <button type="submit" class="btn btn-primary">Kullanıcıyı Kaydet</button>
+                                <button type="submit" class="btn btn-primary">Değişiklikleri Kaydet</button>
+                                <?php endif; ?>
                             </div>
-                        </form>
                     </div>
                 </div>
-            </div>
 
+            </div>
             <?php include '../blocks/footer.php'; ?>
         </div>
-
     </div>
-</div>
+        </div>
+    </div>
 
-<?php include '../blocks/scripts.php'; ?>
+    <?php include '../blocks/scripts.php'; ?>
 </body>
 </html>

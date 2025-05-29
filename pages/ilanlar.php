@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="tr">
 <head>
@@ -10,22 +9,16 @@
         <!-- Sidebar -->
         <?php include '../blocks/sidebar.php'; ?>
 
-        <!-- Main Content -->
         <div class="col d-flex flex-column" style="min-height: 100vh;">
-            <!-- Header -->
             <?php include '../blocks/header.php'; ?>
 
-            <!-- Breadcrumb -->
             <?php include '../blocks/breadcrumb.php'; ?>
 
-            <!-- Content area -->
             <div class="p-3 flex-grow-1">
-                <!-- Bu kısım sizin tarafınızdan doldurulacak -->
-                <h1>İlanlar</h1>
-                <p>Buraya sayfa içeriğinizi ekleyebilirsiniz.</p>
+
+                <p>Bura.</p>
             </div>
 
-            <!-- Footer -->
             <?php include '../blocks/footer.php'; ?>
         </div>
     </div>
