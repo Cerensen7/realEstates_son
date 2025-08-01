@@ -17,7 +17,6 @@ if (empty($user)) {
     exit();
 }
 
-
 try {
     $stmt = $pdo->prepare("DELETE FROM users WHERE id_users = ?");
     $result = $stmt->execute([$userId]);
@@ -36,6 +35,5 @@ try {
 $url = "/realEstate/pages/yetkililer.php";
 header('Location: ' . $url);
 die();
-
 
 ?>

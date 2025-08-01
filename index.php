@@ -15,8 +15,6 @@
             <!-- Header -->
             <?php include 'blocks/header.php'; ?>
 
-            <!-- Breadcrumb -->
-            <?php include 'blocks/breadcrumb.php'; ?>
 
             <!-- Content area -->
             <div class="p-3 flex-grow-1">

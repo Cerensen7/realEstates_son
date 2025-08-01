@@ -1,22 +1,12 @@
-<div class="col-auto bg-dark text-white" style="width: 224px; min-height: 100vh;">
+<div class="col-auto bg-dark text-white position-fixed top-0 start-0 vh-100 overflow-auto" style="width: 224px; z-index: 1000;">
     <!-- Logo -->
-    <div class="d-flex align-items-center p-3 border-bottom border-secondary">
+    <div class="d-flex align-items-center p-3 border-bottom border-secondary ">
         <span class="fs-5 fw-semibold">Adminova</span>
     </div>
 
     <!-- Menu -->
     <div class="p-2">
         <ul class="nav flex-column">
-            <li class="nav-item">
-                <a class="nav-link text-white d-flex align-items-center justify-content-between py-2" href="/realEstate/pages/home.php">
-                    <div>
-                        <i class="bi bi-house-door me-2"></i>
-                        Ana Sayfa
-                    </div>
-                    <span class="badge bg-danger rounded-pill">Dikkat</span>
-                </a>
-            </li>
-
             <li class="mt-3">
                 <div class="text-uppercase fw-bold text-secondary small px-3 mb-1">İLAN YÖNETİM SİSTEMİ</div>
             </li>

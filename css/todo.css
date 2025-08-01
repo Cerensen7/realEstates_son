@@ -1,0 +1,49 @@
+/* Arka plan ve genel görünüm */
+.todo-bg {
+    background: linear-gradient(135deg, #ffe6f0, #9244a3);
+}
+
+/* Kart yapısı */
+.todo-card {
+    max-width: 700px;
+    width: 100%;
+}
+
+/* Başlık bölgesi */
+.bg-gradient-pink {
+    background: linear-gradient(135deg, #ff9ac4, #c27bff);
+}
+
+/* Ekle butonu */
+.btn-gradient-pink {
+    background: linear-gradient(135deg, #ff7eb9, #c07dff);
+    border: none;
+}
+
+.btn-gradient-pink:hover {
+    background: linear-gradient(135deg, #f960a0, #a961f7);
+    color: white;
+}
+
+/* Liste elemanları */
+.list-group-item {
+    background-color: #fff0fa;
+    border: none;
+    border-bottom: 1px dashed #f7b4d7;
+    font-size: 1.05rem;
+}
+
+.list-group-item:last-child {
+    border-bottom: none;
+}
+
+/* Sil butonu */
+.btn-outline-danger {
+    border-color: #ff5e91;
+    color: #ff5e91;
+}
+
+.btn-outline-danger:hover {
+    background-color: #ff5e91;
+    color: white;
+}
